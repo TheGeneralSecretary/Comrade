@@ -1,0 +1,12 @@
+[submodule "Comrade/Dependencies/glfw"]
+	path = Comrade/Dependencies/glfw
+	url = https://github.com/glfw/glfw
+[submodule "Comrade/Dependencies/imgui"]
+	path = Comrade/Dependencies/imgui
+	url = https://github.com/ocornut/imgui
+[submodule "Comrade/Dependencies/spdlog"]
+	path = Comrade/Dependencies/spdlog
+	url = https://github.com/gabime/spdlog
+[submodule "Comrade/Dependencies/yaml-cpp"]
+	path = Comrade/Dependencies/yaml-cpp
+	url = https://github.com/jbeder/yaml-cpp

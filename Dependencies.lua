@@ -1,0 +1,9 @@
+IncludeDir  = {}
+IncludeDir["spdlog"] = "%{wks.location}/Comrade/Dependencies/spdlog/include"
+IncludeDir["glfw"] = "%{wks.location}/Comrade/Dependencies/glfw/include"
+IncludeDir["glad"] = "%{wks.location}/Comrade/Dependencies/glad/include"
+IncludeDir["imgui"] = "%{wks.location}/Comrade/Dependencies/imgui"
+IncludeDir["glm"] = "%{wks.location}/Comrade/Dependencies/glm"
+IncludeDir["stb"] = "%{wks.location}/Comrade/Dependencies/stb"
+IncludeDir["entt"] = "%{wks.location}/Comrade/Dependencies/entt"
+IncludeDir["yaml_cpp"] = "%{wks.location}/Comrade/Dependencies/yaml-cpp"
