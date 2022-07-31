@@ -21,6 +21,10 @@ namespace Comrade
 		void Update();
 		void SetVSync(bool vsync);
 
+		inline const auto& GetNativeWindow() const { return m_NativeWindow; }
+		inline int GetWidth() const { return m_WinProps.Width; }
+		inline int GetHeight() const { return m_WinProps.Height; }
+
 	private:
 		bool InitContext();
 

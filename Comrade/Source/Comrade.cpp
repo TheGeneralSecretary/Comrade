@@ -8,6 +8,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <imgui.h>
 
 class Sandbox : public Comrade::Application
 {
@@ -28,7 +29,7 @@ public:
 
 	virtual void OnUpdate(Comrade::DeltaTime dt) override
 	{
-		//COMRADE_LOG_INFO("FPS {}", (1.0f/dt));
+		m_FPS = (1.0f / dt);
 
 		m_Renderer->GetRenderer2D()->ResetRenderStats();
 
@@ -41,14 +42,25 @@ public:
 		m_Renderer->GetRenderer2D()->RenderQuad({ 0.5f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f }, m_Texture2D);
 
 		m_Renderer->GetRenderer2D()->EndRender();
+	}
 
-		COMRADE_LOG_INFO("DrawCalls: {}", m_Renderer->GetRenderer2D()->GetRenderStats().DrawCallCount);
-		COMRADE_LOG_INFO("QuadCount: {}", m_Renderer->GetRenderer2D()->GetRenderStats().QuadCount);
+	virtual void OnImGuiRender(Comrade::DeltaTime dt) override
+	{
+		auto& stats = m_Renderer->GetRenderer2D()->GetRenderStats();
+		ImGui::Begin("Stats");
+		ImGui::Text("Renderer2D Stats:");
+		ImGui::Text("DrawCalls: %d", stats.DrawCallCount);
+		ImGui::Text("QuadCount: %d", stats.QuadCount);
+		ImGui::Text("VertexCount: %d", stats.GetVertexCount());
+		ImGui::Text("IndexCount: %d", stats.GetIndexCount());
+		ImGui::Text("FPS: %.2f", m_FPS);
+		ImGui::End();
 	}
 
 private:
 	Comrade::MemoryRef<Comrade::Renderer> m_Renderer;
 	Comrade::MemoryRef<Comrade::Texture2D> m_Texture2D;
+	double m_FPS = 0.0f;
 };
 
 int main(int argc, char** argv)
