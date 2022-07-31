@@ -6,7 +6,8 @@
 #include <Comrade/Renderer/Render.h>
 #include <Comrade/Utils/Memory.h>
 #include <Comrade/Scene/Scene.h>
-#include <Comrade/Scene/Entity.h>
+#include <Comrade/Entity/Entity.h>
+#include <Comrade/Entity/Components.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -18,11 +19,16 @@ public:
 	Sandbox(const Comrade::ApplicationProps& props)
 		: Comrade::Application(props)
 	{
-		m_Texture2D = Comrade::CreateRef<Comrade::Texture2D>("Assets/Textures/Comrade.jpg");
+		float aspectRatio = (float)props.Width / (float)props.Height;
 
 		m_ActiveScene = Comrade::CreateRef<Comrade::Scene>();
-		m_ActiveScene->CreateEntity("Tester");
-		m_ActiveScene->CreateEntity("");
+
+		m_CameraEntity = m_ActiveScene->CreateEntity("Camera A");
+		m_CameraEntity.AddComponent<Comrade::CameraComponent>().Primary = true;
+
+		m_SquareEntity = m_ActiveScene->CreateEntity("Square");
+		m_SquareEntity.GetComponent<Comrade::TransformComponent>().Translation = { -0.5f, 0.0f, 0.0f };
+		m_SquareEntity.AddComponent<Comrade::SpriteRendererComponent>(glm::vec4{ 0.0f, 0.0f, 1.0f, 1.0f });
 	}
 
 	~Sandbox()
@@ -39,18 +45,13 @@ public:
 		Comrade::Render::Clear();
 
 		m_ActiveScene->OnSceneUpdate(dt);
-
-		/*m_Renderer->GetRenderer2D()->BeginRender();
-
-		m_Renderer->GetRenderer2D()->RenderQuad({ -0.5f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 1.0f, 1.0f, 1.0f });
-		m_Renderer->GetRenderer2D()->RenderQuad({ 0.5f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f }, m_Texture2D);
-
-		m_Renderer->GetRenderer2D()->EndRender();*/
+		m_ActiveScene->OnSceneRender(m_Renderer);
 	}
 
 	virtual void OnEvent(Comrade::Event& event) override
 	{
-		COMRADE_LOG_INFO("RECV EVENT:({}, {})", (int)event.GetEventType(), event.IsHandled());
+		//COMRADE_LOG_INFO("RECV EVENT:({}, {})", (int)event.GetEventType(), event.IsHandled());
+		event.Dispatch<Comrade::WindowResizeEvent>(event, std::bind(&Sandbox::OnWindowResize, this, std::placeholders::_1));
 	}
 
 	virtual void OnImGuiRender(Comrade::DeltaTime dt) override
@@ -67,9 +68,17 @@ public:
 	}
 
 private:
+	bool OnWindowResize(Comrade::WindowResizeEvent& event)
+	{
+		m_ActiveScene->OnSceneViewPortResize(event.GetWidth(), event.GetHeight());
+
+		return true;
+	}
+
+private:
 	double m_FPS = 0.0f;
 	Comrade::MemoryRef<Comrade::Scene> m_ActiveScene;
-	Comrade::MemoryRef<Comrade::Texture2D> m_Texture2D;
+	Comrade::Entity m_CameraEntity, m_SquareEntity;
 };
 
 int main(int argc, char** argv)
