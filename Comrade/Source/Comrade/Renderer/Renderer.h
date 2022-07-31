@@ -9,6 +9,7 @@ namespace Comrade
 	{
 	public:
 		bool Init();
+		void SetViewPort(int width, int height);
 
 		inline MemoryRef<Renderer2D>& GetRenderer2D() { return m_Renderer2D; }
 

@@ -12,6 +12,8 @@ namespace Comrade
 	public:
 		static void Clear();
 		static void SetClearColor(const glm::vec4& color);
+		static void SetViewPort(int x, int y, int width, int height);
+
 		static void DrawIndexed(const MemoryRef<VertexArray>& va, unsigned int count = 0);
 	};
 }
