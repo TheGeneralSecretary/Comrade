@@ -2,10 +2,16 @@
 #include "Comrade/Core/Application.h"
 #include "Comrade/Utils/DateTime.h"
 #include "Comrade/Core/Logger.h"
+#include "Comrade/Renderer/Renderer.h"
 
 namespace Comrade
 {
 	Application* Application::s_Instance = nullptr;
+
+	Application::~Application()
+	{
+		Renderer::Destroy();
+	}
 
 	Application::Application(const ApplicationProps& props)
 		: m_AppProps(props), m_Running(true), m_Minimized(false)
@@ -16,8 +22,7 @@ namespace Comrade
 		m_Window->Init({ props.Name, props.Width, props.Height, props.VSync });
 		m_Window->SetEventCallback(std::bind(&Application::OnBaseEvent, this, std::placeholders::_1));
 
-		m_Renderer = CreateRef<Renderer>();
-		m_Renderer->Init();
+		Renderer::Init();
 
 		m_ImGui = std::make_unique<CImGui>();
 		m_ImGui->Init();
@@ -70,7 +75,7 @@ namespace Comrade
 		}
 
 		m_Minimized = false;
-		m_Renderer->SetViewPort(event.GetWidth(), event.GetHeight());
+		Comrade::Renderer::SetViewPort(event.GetWidth(), event.GetHeight());
 
 		return false;
 	}

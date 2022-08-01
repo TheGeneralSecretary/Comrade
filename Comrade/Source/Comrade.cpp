@@ -20,14 +20,13 @@ public:
 	Sandbox(const Comrade::ApplicationProps& props)
 		: Comrade::Application(props)
 	{
-		float aspectRatio = (float)props.Width / (float)props.Height;
-
 		m_ActiveScene = Comrade::CreateRef<Comrade::Scene>();
 
 		m_CameraEntity = m_ActiveScene->CreateEntity("Camera A");
 		auto& cc = m_CameraEntity.AddComponent<Comrade::CameraComponent>();
 		cc.Primary = true;
 		cc.Camera.SetOrthographic(10.0f, -1.0f, 1.0f);
+		cc.Camera.SetViewPort(props.Width, props.Height);
 
 		m_SquareEntity = m_ActiveScene->CreateEntity("Square");
 		m_SquareEntity.GetComponent<Comrade::TransformComponent>().Scale = { 2.0f, 2.0f, 1.0f };
@@ -42,13 +41,12 @@ public:
 	{
 		m_FPS = (1.0f / dt);
 
-		m_Renderer->GetRenderer2D()->ResetRenderStats();
+		Comrade::Renderer::GetRenderer2D()->ResetRenderStats();
 
 		Comrade::Render::SetClearColor({ 0.3f, 0.3f, 0.3f, 0.3f });
 		Comrade::Render::Clear();
 
 		m_ActiveScene->OnSceneUpdate(dt);
-		m_ActiveScene->OnSceneRender(m_Renderer);
 	}
 
 	virtual void OnEvent(Comrade::Event& event) override
@@ -59,7 +57,7 @@ public:
 
 	virtual void OnImGuiRender(Comrade::DeltaTime dt) override
 	{
-		auto& stats = m_Renderer->GetRenderer2D()->GetRenderStats();
+		auto& stats = Comrade::Renderer::GetRenderer2D()->GetRenderStats();
 		ImGui::Begin("Stats");
 		ImGui::Text("Renderer2D Stats:");
 		ImGui::Text("DrawCalls: %d", stats.DrawCallCount);

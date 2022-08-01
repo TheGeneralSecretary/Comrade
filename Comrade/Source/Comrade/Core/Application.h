@@ -4,7 +4,6 @@
 #include "Comrade/Core/Window.h"
 #include "Comrade/ImGui/CImGui.h"
 #include "Comrade/Events/AppEvent.h"
-#include "Comrade/Renderer/Renderer.h"
 
 #include <string>
 #include <memory>
@@ -22,6 +21,7 @@ namespace Comrade
 	class Application
 	{
 	public:
+		virtual ~Application();
 		Application(const Application&) = delete;
 		void operator=(const Application&) = delete;
 
@@ -46,8 +46,5 @@ namespace Comrade
 		ApplicationProps m_AppProps;
 		std::unique_ptr<Window> m_Window;
 		std::unique_ptr<CImGui> m_ImGui;
-
-	protected:
-		MemoryRef<Renderer> m_Renderer;
 	};
 }

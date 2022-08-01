@@ -8,13 +8,15 @@ namespace Comrade
 	class Renderer
 	{
 	public:
-		bool Init();
-		void SetViewPort(int width, int height);
+		static bool Init();
+		static void Destroy();
+		static void SetViewPort(int width, int height);
 
-		inline MemoryRef<Renderer2D>& GetRenderer2D() { return m_Renderer2D; }
+		static inline MemoryRef<Renderer2D>& GetRenderer2D() { return m_Renderer2D; }
 
 	private:
-		MemoryRef<Renderer2D> m_Renderer2D;
+		static bool m_Initialzed;
+		static MemoryRef<Renderer2D> m_Renderer2D;
 	};
 }
 
