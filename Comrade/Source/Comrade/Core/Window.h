@@ -20,6 +20,7 @@ namespace Comrade
 	{
 	public:
 		bool Init(const WindowProps& props);
+		void Destroy();
 		void Update();
 		void SetVSync(bool vsync);
 
@@ -31,6 +32,7 @@ namespace Comrade
 
 	private:
 		bool InitContext();
+		bool InitInputHandler();
 		bool InitEventSystem();
 
 	private:
@@ -43,6 +45,7 @@ namespace Comrade
 			EventCallbackFn EventCallback;
 		};
 
+		bool m_Initialized = false;
 		WindowData m_WinData;
 		GLFWwindow* m_NativeWindow;
 	};

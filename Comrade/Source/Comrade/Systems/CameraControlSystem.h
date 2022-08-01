@@ -4,7 +4,7 @@
 
 namespace Comrade
 {
-	class TagSystem : public System
+	class CameraControlSystem : public System
 	{
 	public:
 		virtual void OnUpdate(DeltaTime dt, entt::registry& registry) override;

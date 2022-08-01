@@ -8,6 +8,7 @@
 #include <Comrade/Scene/Scene.h>
 #include <Comrade/Entity/Entity.h>
 #include <Comrade/Entity/Components.h>
+#include <Comrade/Input/Input.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -24,10 +25,12 @@ public:
 		m_ActiveScene = Comrade::CreateRef<Comrade::Scene>();
 
 		m_CameraEntity = m_ActiveScene->CreateEntity("Camera A");
-		m_CameraEntity.AddComponent<Comrade::CameraComponent>().Primary = true;
+		auto& cc = m_CameraEntity.AddComponent<Comrade::CameraComponent>();
+		cc.Primary = true;
+		cc.Camera.SetOrthographic(10.0f, -1.0f, 1.0f);
 
 		m_SquareEntity = m_ActiveScene->CreateEntity("Square");
-		m_SquareEntity.GetComponent<Comrade::TransformComponent>().Translation = { -0.5f, 0.0f, 0.0f };
+		m_SquareEntity.GetComponent<Comrade::TransformComponent>().Scale = { 2.0f, 2.0f, 1.0f };
 		m_SquareEntity.AddComponent<Comrade::SpriteRendererComponent>(glm::vec4{ 0.0f, 0.0f, 1.0f, 1.0f });
 	}
 

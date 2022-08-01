@@ -5,11 +5,11 @@
 
 namespace Comrade
 {
-	void TagSystem::OnUpdate(entt::registry& registry)
+	void TagSystem::OnUpdate(DeltaTime dt, entt::registry& registry)
 	{
 		registry.view<TagComponent>().each([=](auto entityID, TagComponent& component)
 			{
-				COMRADE_LOG_INFO("Registered Entity: {}", component.Tag);
+				COMRADE_LOG_INFO("Existing Entity: {}", component.Tag);
 			});
 	}
 }

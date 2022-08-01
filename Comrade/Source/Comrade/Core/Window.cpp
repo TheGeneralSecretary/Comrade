@@ -2,6 +2,7 @@
 #include "Comrade/Core/Window.h"
 #include "Comrade/Core/Logger.h"
 #include "Comrade/Events/AppEvent.h"
+#include "Comrade/Input/Input.h"
 
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
@@ -27,8 +28,23 @@ namespace Comrade
 		m_WinData.VSync = props.VSync;
 
 		if (!InitContext()) return false;
+		if (!InitInputHandler()) return false;
 		if (!InitEventSystem()) return false;
-		return true;
+		return m_Initialized = true;
+	}
+
+	void Window::Destroy()
+	{
+		if (m_Initialized)
+		{
+			glfwSetErrorCallback(nullptr);
+			glfwDestroyWindow(m_NativeWindow);
+			glfwTerminate();
+
+			Input::Destroy();
+
+			m_Initialized = false;
+		}
 	}
 
 	void Window::Update()
@@ -84,6 +100,71 @@ namespace Comrade
 		glfwShowWindow(m_NativeWindow);
 
 		COMRADE_LOG_DEBUG("Initialized Context");
+		return true;
+	}
+
+	bool Window::InitInputHandler()
+	{
+		if (!Input::Init())
+		{
+			COMRADE_LOG_ERROR("FAILED Input::Init");
+			return false;
+		}
+
+		glfwSetKeyCallback(m_NativeWindow, [](GLFWwindow* window, int key, int scancode, int action, int mods)
+			{
+				switch (action)
+				{
+				case GLFW_PRESS:
+					Input::OnKeyEvent(KeyEventType::Press, static_cast<KeyCode>(key));
+					break;
+				case GLFW_RELEASE:
+					Input::OnKeyEvent(KeyEventType::Release, static_cast<KeyCode>(key));
+					break;
+				case GLFW_REPEAT:
+					Input::OnKeyEvent(KeyEventType::Repeat, static_cast<KeyCode>(key));
+					break;
+				default:
+					break;
+				}
+			});
+
+		glfwSetCharCallback(m_NativeWindow, [](GLFWwindow* window, unsigned int codepoint)
+			{
+				Input::OnCharEvent(KeyEventType::Press, codepoint);
+			});
+
+		glfwSetCursorPosCallback(m_NativeWindow, [](GLFWwindow* window, double xpos, double ypos)
+			{
+				Input::OnMouseMoveEvent({ xpos, ypos });
+			});
+
+		glfwSetScrollCallback(m_NativeWindow, [](GLFWwindow* window, double xoffset, double yoffset)
+			{
+				double xpos, ypos;
+				glfwGetCursorPos(window, &xpos, &ypos);
+				MouseEventType evtype = yoffset > 0 ? MouseEventType::ScrollUp : MouseEventType::ScrollDown;
+				Input::OnMouseScrollEvent(evtype, { xpos, ypos });
+			});
+
+		glfwSetMouseButtonCallback(m_NativeWindow, [](GLFWwindow* window, int button, int action, int mods)
+			{
+				double xpos, ypos;
+				glfwGetCursorPos(window, &xpos, &ypos);
+
+				switch (action)
+				{
+				case GLFW_PRESS:
+					Input::OnMouseButtonEvent(MouseEventType::Press, static_cast<MouseCode>(button), { xpos, ypos });
+					break;
+				case GLFW_RELEASE:
+					Input::OnMouseButtonEvent(MouseEventType::Release, static_cast<MouseCode>(button), { xpos, ypos });
+					break;
+				default:
+					break;
+				}
+			});
+
 		return true;
 	}
 
