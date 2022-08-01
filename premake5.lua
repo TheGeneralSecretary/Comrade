@@ -2,7 +2,7 @@ include "Dependencies.lua"
 
 workspace "Comrade"
    architecture "x86"
-   startproject "Comrade"
+   startproject "ComradeEditor"
    configurations { "Debug", "Release" }
 
 outputdir = "%{cfg.system}-%{cfg.architecture}-%{cfg.buildcfg}"
@@ -16,3 +16,4 @@ group "Dependencies"
 group ""
 
 include "Comrade"
+include "ComradeEditor"

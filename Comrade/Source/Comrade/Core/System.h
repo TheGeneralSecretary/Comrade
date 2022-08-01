@@ -4,7 +4,7 @@
 	#ifdef _WIN64
 		#error "x64 platforms are not supported"
 	#else
-		#define JUDE_PLATFORM_WINDOWS
+		#define COMRADE_PLATFORM_WINDOWS
 	#endif
 #else
 		#error "unsupported platform"
