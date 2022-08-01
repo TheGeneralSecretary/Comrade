@@ -9,6 +9,7 @@
 #include <Comrade/Entity/Entity.h>
 #include <Comrade/Entity/Components.h>
 #include <Comrade/Input/Input.h>
+#include <Comrade/Renderer/Framebuffer.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -31,6 +32,8 @@ public:
 		m_SquareEntity = m_ActiveScene->CreateEntity("Square");
 		m_SquareEntity.GetComponent<Comrade::TransformComponent>().Scale = { 2.0f, 2.0f, 1.0f };
 		m_SquareEntity.AddComponent<Comrade::SpriteRendererComponent>(glm::vec4{ 0.0f, 0.0f, 1.0f, 1.0f });
+
+		m_Framebuffer = Comrade::CreateRef<Comrade::Framebuffer>(props.Width, props.Height);
 	}
 
 	~Sandbox()
@@ -39,7 +42,15 @@ public:
 
 	virtual void OnUpdate(Comrade::DeltaTime dt) override
 	{
+		if (m_ViewPort.x > 0.0f && m_ViewPort.y > 0.0f && (m_Framebuffer->GetWidth() != m_ViewPort.x || m_Framebuffer->GetHeight() != m_ViewPort.y))
+		{
+			m_Framebuffer->Resize(m_ViewPort.x, m_ViewPort.y);
+			m_ActiveScene->OnSceneViewPortResize(m_ViewPort.x, m_ViewPort.y);
+		}
+
 		m_FPS = (1.0f / dt);
+
+		m_Framebuffer->Bind();
 
 		Comrade::Renderer::GetRenderer2D()->ResetRenderStats();
 
@@ -47,16 +58,23 @@ public:
 		Comrade::Render::Clear();
 
 		m_ActiveScene->OnSceneUpdate(dt);
+	
+		m_Framebuffer->Unbind();
 	}
 
 	virtual void OnEvent(Comrade::Event& event) override
 	{
 		//COMRADE_LOG_INFO("RECV EVENT:({}, {})", (int)event.GetEventType(), event.IsHandled());
-		event.Dispatch<Comrade::WindowResizeEvent>(event, std::bind(&Sandbox::OnWindowResize, this, std::placeholders::_1));
 	}
 
 	virtual void OnImGuiRender(Comrade::DeltaTime dt) override
 	{
+		ImGui::Begin("ViewPort");
+		ImVec2 viewport = ImGui::GetContentRegionAvail();
+		m_ViewPort = { viewport.x, viewport.y };
+		ImGui::Image((void*)m_Framebuffer->GetColorTextureID(), { m_ViewPort.x, m_ViewPort.y }, ImVec2(0, 1), ImVec2(1, 0));
+		ImGui::End();
+
 		auto& stats = Comrade::Renderer::GetRenderer2D()->GetRenderStats();
 		ImGui::Begin("Stats");
 		ImGui::Text("Renderer2D Stats:");
@@ -69,17 +87,11 @@ public:
 	}
 
 private:
-	bool OnWindowResize(Comrade::WindowResizeEvent& event)
-	{
-		m_ActiveScene->OnSceneViewPortResize(event.GetWidth(), event.GetHeight());
-
-		return true;
-	}
-
-private:
 	double m_FPS = 0.0f;
 	Comrade::MemoryRef<Comrade::Scene> m_ActiveScene;
 	Comrade::Entity m_CameraEntity, m_SquareEntity;
+	Comrade::MemoryRef<Comrade::Framebuffer> m_Framebuffer;
+	glm::vec2 m_ViewPort;
 };
 
 int main(int argc, char** argv)
