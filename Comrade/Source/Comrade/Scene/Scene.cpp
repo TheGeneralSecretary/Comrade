@@ -9,7 +9,7 @@ namespace Comrade
 {
 	void Scene::OnSceneUpdate(DeltaTime dt)
 	{
-		m_TagSystem.OnUpdate(dt, m_Registry);
+		//m_TagSystem.OnUpdate(dt, m_Registry);
 		m_CameraControlSystem.OnUpdate(dt, m_Registry);
 		m_RenderSystem.OnUpdate(dt, m_Registry);
 	}

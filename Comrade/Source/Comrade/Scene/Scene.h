@@ -19,6 +19,8 @@ namespace Comrade
 
 		Entity CreateEntity(const std::string& name = "");
 
+		inline entt::registry& GetRegistry() { return m_Registry; }
+
 	private:
 		friend class Entity;
 		

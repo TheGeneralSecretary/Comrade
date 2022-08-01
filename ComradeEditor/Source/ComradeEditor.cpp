@@ -1,5 +1,9 @@
 #include "comradepch.h"
 
+#include "Panels/PanelManager.h"
+#include "Panels/SceneHierarchyPanel.h"
+#include "Panels/PropertiesPanel.h"
+
 #include <Comrade/Core/Application.h>
 #include <Comrade/Core/Logger.h>
 #include <Comrade/Renderer/Renderer.h>
@@ -36,6 +40,9 @@ namespace Comrade
 			m_SquareEntity.AddComponent<SpriteRendererComponent>(glm::vec4{ 0.0f, 0.0f, 1.0f, 1.0f });
 
 			m_Framebuffer = CreateRef<Framebuffer>(props.Width, props.Height);
+
+			PanelManager::AddPanel("SceneHierarchyPanel", CreateRef<SceneHierarchyPanel>(m_ActiveScene));
+			PanelManager::AddPanel("PropertiesyPanel", CreateRef<PropertiesPanel>());
 		}
 
 		~ComradeEditor()
@@ -125,6 +132,8 @@ namespace Comrade
 				}
 				ImGui::EndMenuBar();
 			}
+
+			PanelManager::RenderAll();
 
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 			ImGui::Begin("Viewport");
