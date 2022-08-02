@@ -87,7 +87,9 @@ namespace Comrade
 		DrawComponent<TransformComponent>("Transform", entity, [](TransformComponent& component)
 			{
 				ImGui::DragFloat3("Translation", glm::value_ptr(component.Translation), 0.1f);
-				ImGui::DragFloat3("Rotation", glm::value_ptr(component.Rotation), 0.1f);
+				glm::vec3 rotation = glm::degrees(component.Rotation);
+				if(ImGui::DragFloat3("Rotation", glm::value_ptr(rotation), 0.1f))
+					component.Rotation = glm::radians(rotation);
 				ImGui::DragFloat3("Scale", glm::value_ptr(component.Scale), 0.1f);
 			});
 

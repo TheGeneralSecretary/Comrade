@@ -7,10 +7,16 @@
 
 namespace Comrade
 {
+	Scene::Scene(const std::string& name)
+		: m_Name(name), m_ViewPortFocused(false)
+	{
+	}
+
 	void Scene::OnSceneUpdate(DeltaTime dt)
 	{
 		//m_TagSystem.OnUpdate(dt, m_Registry);
-		m_CameraControlSystem.OnUpdate(dt, m_Registry);
+		if(m_ViewPortFocused)
+			m_CameraControlSystem.OnUpdate(dt, m_Registry);
 		m_RenderSystem.OnUpdate(dt, m_Registry);
 	}
 

@@ -5,6 +5,8 @@
 #include <string>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/quaternion.hpp>
 
 namespace Comrade
 {
@@ -29,7 +31,7 @@ namespace Comrade
 
 		glm::mat4 GetTransform() const
 		{
-			glm::mat4 transform(1.0f);
+			/*glm::mat4 transform(1.0f);
 			transform = glm::translate(transform, Translation);
 			transform = glm::rotate(transform, glm::radians(Rotation.x), { 1, 0, 0 });
 			transform = glm::rotate(transform, glm::radians(Rotation.y), { 0, 1, 0 });
@@ -37,7 +39,11 @@ namespace Comrade
 			transform = glm::rotate(transform, glm::radians(Rotation.z), { 0, 0, 1 });
 			transform = glm::translate(transform, { Scale * -0.5f });
 			transform = glm::scale(transform, Scale);
-			return transform;
+			return transform;*/
+
+			glm::mat4 rotation = glm::toMat4(glm::quat(Rotation));
+
+			return glm::translate(glm::mat4(1.0f), Translation) * rotation * glm::scale(glm::mat4(1.0f), Scale);
 		}
 	};
 
