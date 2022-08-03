@@ -61,19 +61,19 @@ namespace Comrade
 		}
 	}
 
-	void Renderer2D::BeginRender()
-	{
-		m_Shader->Bind();
-		m_Shader->SetMat4("u_ProjectionViewMatrix", glm::mat4(1.0f));
-		m_QuadVertexIndex = 0;
-		m_TextureIndex = 1;
-	}
-
 	void Renderer2D::BeginRender(const Camera& camera, const glm::mat4& transform)
 	{
 		glm::mat4 projectionView = camera.GetProjection() * glm::inverse(transform);
 		m_Shader->Bind();
 		m_Shader->SetMat4("u_ProjectionViewMatrix", projectionView);
+		m_QuadVertexIndex = 0;
+		m_TextureIndex = 1;
+	}
+
+	void Renderer2D::BeginRender(const EditorCamera& camera)
+	{
+		m_Shader->Bind();
+		m_Shader->SetMat4("u_ProjectionViewMatrix", camera.GetProjectionViewMatrix());
 		m_QuadVertexIndex = 0;
 		m_TextureIndex = 1;
 	}
