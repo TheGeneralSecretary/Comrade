@@ -50,6 +50,7 @@ namespace Comrade
 		};
 
 		std::array<QuadVertex, 4> CreateQuad(const glm::vec3& position, const glm::vec3& scale, const glm::vec4& color, float texID = 0.0f);
+		std::array<QuadVertex, 4> CreateCenteredQuad(const glm::vec4& color, float texID = 0.0f);
 		MemoryRef<uint32_t[]> GenerateIndices();
 		void ResetBatch();
 

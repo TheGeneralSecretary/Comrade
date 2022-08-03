@@ -98,11 +98,29 @@ namespace Comrade
 				ImGui::Checkbox("Primary", &component.Primary);
 
 				auto& camera = component.Camera;
+
+				const char* projections[] = { "Orthographic", "Perspective" };
+				int projectionType = (int)camera.GetProjectionType();
+
+				if (ImGui::BeginCombo("Projection", projections[projectionType]))
+				{
+					for (int i = 0; i < 2; i++)
+					{
+						bool selected = projectionType == i;
+						if (ImGui::Selectable(projections[i], selected))
+						{
+							projectionType = i;
+							camera.SetProjectionType((CameraProjectionType)i);
+						}
+
+						if (selected) ImGui::SetItemDefaultFocus();
+					}
+
+					ImGui::EndCombo();
+				}
+
 				if (camera.GetProjectionType() == CameraProjectionType::Orthographic)
 				{
-					if (ImGui::BeginCombo("Projection", "Orthographic"))
-						ImGui::EndCombo();
-
 					ImGui::Checkbox("Fixed", &component.Fixed);
 
 					float orthoSize = camera.GetOrthographicSize();
@@ -116,6 +134,21 @@ namespace Comrade
 					float orthoFar = camera.GetOrthographicFar();
 					if (ImGui::DragFloat("Far", &orthoFar))
 						camera.SetOrthographicFar(orthoFar);
+				}
+
+				if (camera.GetProjectionType() == CameraProjectionType::Perspective)
+				{
+					float perspectiveFOV = camera.GetPerspectiveFOV();
+					if (ImGui::DragFloat("FOVy", &perspectiveFOV))
+						camera.SetPerspectiveFOV(perspectiveFOV);
+
+					float perspectiveNear = camera.GetPerspectiveNear();
+					if (ImGui::DragFloat("Near", &perspectiveNear))
+						camera.SetPerspectiveNear(perspectiveNear);
+
+					float perspectiveFar = camera.GetPerspectiveFar();
+					if (ImGui::DragFloat("Far", &perspectiveFar))
+						camera.SetPerspectiveFar(perspectiveFar);
 				}
 			});
 

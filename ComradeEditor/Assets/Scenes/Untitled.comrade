@@ -1,9 +1,29 @@
 Scene: Untitled
 Entities:
-  - Entity: 0
+  - Entity: 1
     TagComponent:
-      Tag: Entity
+      Tag: Square
     TransformComponent:
-      Translation: [-3.79999995, 0, 0]
+      Translation: [0, 0, -1]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
+    SpriteRendererComponent:
+      Color: [1, 1, 1, 1]
+  - Entity: 0
+    TagComponent:
+      Tag: Camera
+    TransformComponent:
+      Translation: [0, 0, 4]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    CameraComponent:
+      Primary: true
+      Fixed: false
+      Camera:
+        ProjectionType: 1
+        OrthographicSize: 1
+        OrthographicNear: -1
+        OrthographicFar: 1
+        PerspectiveFOV: 45
+        PerspectiveNear: 0.100000001
+        PerspectiveFar: 100
