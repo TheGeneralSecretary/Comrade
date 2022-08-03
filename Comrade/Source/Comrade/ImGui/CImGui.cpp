@@ -6,6 +6,7 @@
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 #include <GLFW/glfw3.h>
+#include <ImGuizmo.h>
 
 namespace Comrade
 {
@@ -21,7 +22,7 @@ namespace Comrade
 		ImGui::StyleColorsDark();
 
 		ImGui_ImplGlfw_InitForOpenGL(Application::Get()->GetWindow().GetNativeWindow(), true);
-		ImGui_ImplOpenGL3_Init("#version 440 core");
+		ImGui_ImplOpenGL3_Init("#version 460 core");
 		return m_Initialized = true;
 	}
 
@@ -40,6 +41,7 @@ namespace Comrade
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
+		ImGuizmo::BeginFrame();
 	}
 
 	void CImGui::EngFrame()

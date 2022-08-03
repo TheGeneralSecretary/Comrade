@@ -20,6 +20,24 @@ namespace Comrade
 		glViewport(x, y, width, height);
 	}
 
+	void Render::SetDepthTesting(bool status)
+	{
+		status ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
+	}
+	
+	void Render::SetAlphaBlending(bool status)
+	{
+		if (status)
+		{
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glEnable(GL_BLEND);
+		}
+		else
+		{
+			glDisable(GL_BLEND);
+		}
+	}
+
 	void Render::DrawIndexed(const MemoryRef<VertexArray>& va, unsigned int count)
 	{
 		glDrawElements(GL_TRIANGLES, count == 0 ? va->GetIndexBuffer()->GetCount() : count, GL_UNSIGNED_INT, nullptr);

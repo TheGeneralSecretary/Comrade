@@ -16,12 +16,14 @@
 #include <Comrade/Renderer/Framebuffer.h>
 #include <Comrade/Scene/SceneSerializer.h>
 #include <Comrade/Scene/EditorCamera.h>
-
 #include <Comrade/Platform/FileDialog.h>
+#include <Comrade/Utils/Math.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <imgui.h>
+#include <ImGuizmo.h>
 
 namespace Comrade
 {
@@ -58,6 +60,7 @@ namespace Comrade
 				m_EditorCamera->OnUpdate(dt);
 			}
 
+			OnEditorInputUpdate();
 			m_FPS = (1.0f / dt);
 
 			m_Framebuffer->Bind();
@@ -71,6 +74,21 @@ namespace Comrade
 			m_ActiveScene->OnSceneEditor(dt, *m_EditorCamera);
 
 			m_Framebuffer->Unbind();
+		}
+
+		void OnEditorInputUpdate()
+		{
+			if (Input::IsKeyPressed(KeyCode::Q))
+				m_GizmoType = ImGuizmo::OPERATION::TRANSLATE;
+
+			if (Input::IsKeyPressed(KeyCode::W))
+				m_GizmoType = ImGuizmo::OPERATION::ROTATE;
+
+			if (Input::IsKeyPressed(KeyCode::E))
+				m_GizmoType = ImGuizmo::OPERATION::SCALE;
+
+			if (Input::IsKeyPressed(KeyCode::R))
+				m_GizmoType = -1;
 		}
 
 		virtual void OnEvent(Event& event) override
@@ -157,9 +175,34 @@ namespace Comrade
 			ImVec2 viewport = ImGui::GetContentRegionAvail();
 			m_ViewPort = { viewport.x, viewport.y };
 			ImGui::Image((void*)m_Framebuffer->GetColorTextureID(), ImVec2(m_ViewPort.x, m_ViewPort.y), ImVec2(0, 1), ImVec2(1, 0));
+
+			Entity selectedEntity = SceneHierarchyPanel::GetSelectedEntity();
+			if (selectedEntity && m_GizmoType != -1)
+			{
+				ImGuizmo::SetOrthographic(false);
+				ImGuizmo::SetDrawlist();
+				ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, (float)ImGui::GetWindowWidth(), (float)ImGui::GetWindowHeight());
+
+				auto& tc = selectedEntity.GetComponent<TransformComponent>();
+				auto transform = tc.GetTransform();
+				ImGuizmo::Manipulate(glm::value_ptr(m_EditorCamera->GetViewMatrix()), glm::value_ptr(m_EditorCamera->GetProjection()), (ImGuizmo::OPERATION)m_GizmoType, ImGuizmo::LOCAL, glm::value_ptr(transform));
+				if (ImGuizmo::IsUsing())
+				{
+					glm::vec3 translation{};
+					glm::vec3 rotation{};
+					glm::vec3 scale{};
+
+					if (Math::MatrixDecompose(transform, translation, rotation, scale))
+					{
+						tc.Translation = translation;
+						tc.Rotation = rotation;
+						tc.Scale = scale;
+					}
+				}
+			}
+
 			ImGui::End();
 			ImGui::PopStyleVar();
-
 			ImGui::End();
 
 			auto& stats = Renderer::GetRenderer2D()->GetRenderStats();
@@ -226,6 +269,7 @@ namespace Comrade
 		bool m_ViewPortFocused = false;
 		std::string m_ScenePath;
 		MemoryRef<EditorCamera> m_EditorCamera;
+		int m_GizmoType = -1;
 	};
 }
 

@@ -60,4 +60,16 @@ namespace Comrade
 	{
 		m_Registry.destroy((entt::entity)entity.GetID());
 	}
+
+	Entity Scene::GetPrimaryCamera()
+	{
+		auto cameras = m_Registry.view<CameraComponent>();
+		for (auto entity : cameras)
+		{
+			const auto& camera = cameras.get<CameraComponent>(entity);
+			if (camera.Primary) return Entity{ entity, this };
+		}
+
+		return {};
+	}
 }

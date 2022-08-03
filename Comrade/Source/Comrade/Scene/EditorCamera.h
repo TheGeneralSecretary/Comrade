@@ -19,7 +19,6 @@ namespace Comrade
 		void OnUpdate(DeltaTime dt);
 		void OnEvent(Event& event);
 
-		inline const glm::mat4& GetProjectionMatrix() const { return m_Projection; }
 		inline const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }
 		inline const glm::mat4& GetProjectionViewMatrix() const { return m_ProjectionViewMatrix; }
 
