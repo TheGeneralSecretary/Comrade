@@ -14,6 +14,7 @@ namespace Comrade
 
 		virtual void OnImGuiRender() override;
 
+		inline void SetScene(const MemoryRef<Scene>& scene) { m_Scene = scene; m_SelectedEntity = {}; }
 		static inline Entity& GetSelectedEntity() { return m_SelectedEntity; }
 
 	private:

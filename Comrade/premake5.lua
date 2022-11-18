@@ -21,6 +21,8 @@ files
 	"Dependencies/stb/**.cpp",
 }
 
+excludes "Source/Comrade/Platform/**.cpp"
+
 defines
 {
 	"COMRADE_ENGINE",
@@ -56,6 +58,11 @@ filter "system:windows"
 	defines
 	{
 		"COMRADE_PLATFORM_WINDOWS",
+	}
+
+	files
+	{
+		"Source/Comrade/Platform/Win32/**.cpp"
 	}
 
 filter "configurations:Debug"

@@ -14,6 +14,8 @@
 #include <Comrade/Entity/Components.h>
 #include <Comrade/Input/Input.h>
 #include <Comrade/Renderer/Framebuffer.h>
+#include <Comrade/Scene/SceneSerializer.h>
+#include <Comrade/Platform/FileDialog.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -27,18 +29,7 @@ namespace Comrade
 		ComradeEditor(const ApplicationProps& props)
 			: Application(props)
 		{
-			m_ActiveScene = CreateRef<Scene>();
-
-			m_CameraEntity = m_ActiveScene->CreateEntity("Camera A");
-			auto& cc = m_CameraEntity.AddComponent<CameraComponent>();
-			cc.Primary = true;
-			cc.Camera.SetOrthographic(10.0f, -1.0f, 1.0f);
-			cc.Camera.SetViewPort(props.Width, props.Height);
-
-			m_SquareEntity = m_ActiveScene->CreateEntity("Square");
-			m_SquareEntity.GetComponent<TransformComponent>().Scale = { 2.0f, 2.0f, 1.0f };
-			m_SquareEntity.AddComponent<SpriteRendererComponent>(glm::vec4{ 0.0f, 0.0f, 1.0f, 1.0f });
-
+			m_ActiveScene = CreateRef<Scene>("Untitled");
 			m_Framebuffer = CreateRef<Framebuffer>(props.Width, props.Height);
 
 			PanelManager::AddPanel("SceneHierarchyPanel", CreateRef<SceneHierarchyPanel>(m_ActiveScene));
@@ -125,6 +116,18 @@ namespace Comrade
 			{
 				if (ImGui::BeginMenu("File"))
 				{
+					if (ImGui::MenuItem("New"))
+						NewScene();
+
+					if (ImGui::MenuItem("Open"))
+						OpenScene();
+
+					if (ImGui::MenuItem("Save"))
+						SaveScene();
+
+					if (ImGui::MenuItem("Save As"))
+						SaveSceneAs();
+
 					if (ImGui::MenuItem("Exit"))
 						Close();
 
@@ -138,6 +141,7 @@ namespace Comrade
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 			ImGui::Begin("Viewport");
 			m_ViewPortFocused = ImGui::IsWindowFocused();
+			m_ActiveScene->SetViewPortFocus(m_ViewPortFocused);
 			ImVec2 viewport = ImGui::GetContentRegionAvail();
 			m_ViewPort = { viewport.x, viewport.y };
 			ImGui::Image((void*)m_Framebuffer->GetColorTextureID(), ImVec2(m_ViewPort.x, m_ViewPort.y), ImVec2(0, 1), ImVec2(1, 0));
@@ -153,17 +157,62 @@ namespace Comrade
 			ImGui::Text("QuadCount: %d", stats.QuadCount);
 			ImGui::Text("VertexCount: %d", stats.GetVertexCount());
 			ImGui::Text("IndexCount: %d", stats.GetIndexCount());
+			ImGui::NewLine();
+			ImGui::Text("Scene Stats:");
 			ImGui::Text("FPS: %.2f", m_FPS);
+			ImGui::Text("Active Scene: %s", m_ActiveScene->GetName().c_str());
 			ImGui::End();
+		}
+
+	private:
+		void NewScene()
+		{
+			m_ActiveScene = CreateRef<Scene>();
+			PanelManager::GetPanel<SceneHierarchyPanel>("SceneHierarchyPanel")->SetScene(m_ActiveScene);
+			m_ActiveScene->OnSceneViewPortResize(m_ViewPort.x, m_ViewPort.y);
+		}
+
+		void OpenScene()
+		{
+			std::string filepath = FileDialog::OpenFile("Comrade Scene (*.comrade)\0*.comrade\0");
+			if (!filepath.empty())
+			{
+				m_ActiveScene = CreateRef<Scene>();
+				PanelManager::GetPanel<SceneHierarchyPanel>("SceneHierarchyPanel")->SetScene(m_ActiveScene);
+				SceneSerializer::Deserialize(m_ActiveScene, filepath);
+				m_ActiveScene->OnSceneViewPortResize(m_ViewPort.x, m_ViewPort.y);
+				m_ScenePath = filepath;
+			}
+		}
+
+		void SaveScene()
+		{
+			if (!m_ScenePath.empty())
+			{
+				SceneSerializer::Serialize(m_ActiveScene, m_ScenePath);
+				return;
+			}
+
+			SaveSceneAs();
+		}
+
+		void SaveSceneAs()
+		{
+			std::string filepath = FileDialog::SaveFile("Comrade Scene (*.comrade)\0*.comrade\0");
+			if (!filepath.empty())
+			{
+				SceneSerializer::Serialize(m_ActiveScene, filepath);
+				m_ScenePath = filepath;
+			}
 		}
 
 	private:
 		double m_FPS = 0.0f;
 		MemoryRef<Scene> m_ActiveScene;
-		Entity m_CameraEntity, m_SquareEntity;
 		MemoryRef<Framebuffer> m_Framebuffer;
 		glm::vec2 m_ViewPort;
 		bool m_ViewPortFocused = false;
+		std::string m_ScenePath;
 	};
 }
 
