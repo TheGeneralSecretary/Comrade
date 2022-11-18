@@ -1,4 +1,4 @@
 Comrade
 Comrade Graphics Engine
-AUTHOR: The Dictator
+AUTHOR: TheGeneralSecretary
 License: APACHE-2.0

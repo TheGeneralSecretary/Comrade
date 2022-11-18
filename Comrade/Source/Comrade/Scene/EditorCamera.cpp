@@ -34,23 +34,26 @@ namespace Comrade
 
 	void EditorCamera::OnUpdate(DeltaTime dt)
 	{
-		if (Input::IsKeyPressed(KeyCode::W))
-			m_Translation.y += m_TranslationSpeed * dt;
+		if (Input::IsKeyPressed(KeyCode::LeftControl))
+		{
+			if (Input::IsKeyPressed(KeyCode::W))
+				m_Translation.y += m_TranslationSpeed * dt;
+		
+			if (Input::IsKeyPressed(KeyCode::S))
+				m_Translation.y -= m_TranslationSpeed * dt;
 
-		if (Input::IsKeyPressed(KeyCode::S))
-			m_Translation.y -= m_TranslationSpeed * dt;
+			if (Input::IsKeyPressed(KeyCode::A))
+				m_Translation.x -= m_TranslationSpeed * dt;
 
-		if (Input::IsKeyPressed(KeyCode::A))
-			m_Translation.x -= m_TranslationSpeed * dt;
+			if (Input::IsKeyPressed(KeyCode::D))
+				m_Translation.x += m_TranslationSpeed * dt;
 
-		if (Input::IsKeyPressed(KeyCode::D))
-			m_Translation.x += m_TranslationSpeed * dt;
+			if (Input::IsKeyPressed(KeyCode::Q))
+				m_Rotation += m_RotationSpeed * dt;
 
-		if (Input::IsKeyPressed(KeyCode::Q))
-			m_Rotation += m_RotationSpeed * dt;
-
-		if (Input::IsKeyPressed(KeyCode::E))
-			m_Rotation -= m_RotationSpeed * dt;
+			if (Input::IsKeyPressed(KeyCode::E))
+				m_Rotation -= m_RotationSpeed * dt;
+		}
 
 		CalculateProjection();
 	}

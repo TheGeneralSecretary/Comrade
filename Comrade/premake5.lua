@@ -19,6 +19,8 @@ files
 	"Dependencies/glm/glm/**.inl",
 	"Dependencies/stb/**.h",
 	"Dependencies/stb/**.cpp",
+	"Dependencies/ImGuizmo/ImGuizmo.h",
+	"Dependencies/ImGuizmo/ImGuizmo.cpp",
 }
 
 excludes "Source/Comrade/Platform/**.cpp"
@@ -40,6 +42,7 @@ includedirs
 	"%{IncludeDir.imgui}",
 	"%{IncludeDir.entt}",
 	"%{IncludeDir.yaml_cpp}",
+	"%{IncludeDir.imguizmo}",
 }
 
 links
@@ -51,6 +54,9 @@ links
 	"yaml-cpp",
 	"opengl32.lib",
 }
+
+filter "files:Dependencies/ImGuizmo/**.cpp"
+	flags { "NoPCH" }
 
 filter "system:windows"
 	systemversion "latest"

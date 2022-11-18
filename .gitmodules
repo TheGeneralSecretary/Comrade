@@ -13,3 +13,6 @@
 [submodule "Comrade/Dependencies/glm"]
 	path = Comrade/Dependencies/glm
 	url = https://github.com/g-truc/glm
+[submodule "Comrade/Dependencies/ImGuizmo"]
+	path = Comrade/Dependencies/ImGuizmo
+	url = https://github.com/CedricGuillemet/ImGuizmo

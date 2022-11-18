@@ -20,6 +20,7 @@ includedirs
 	"%{IncludeDir.imgui}",
 	"%{IncludeDir.glm}",
 	"%{IncludeDir.entt}",
+	"%{IncludeDir.imguizmo}",
 }
 
 links
