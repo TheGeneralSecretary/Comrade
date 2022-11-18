@@ -11,7 +11,8 @@ namespace Comrade
 
 	void Scene::OnSceneUpdate(DeltaTime dt)
 	{
-		//m_TagSystem.OnUpdate(m_Registry);
+		m_TagSystem.OnUpdate(dt, m_Registry);
+		m_CameraControlSystem.OnUpdate(dt, m_Registry);
 
 		auto cameras = m_Registry.group<CameraComponent>(entt::get<TransformComponent>);
 		for (auto entity : cameras)

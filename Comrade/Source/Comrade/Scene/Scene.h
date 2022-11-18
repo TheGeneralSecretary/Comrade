@@ -3,6 +3,7 @@
 #include "Comrade/Core/DeltaTime.h"
 #include "Comrade/Renderer/Renderer.h"
 #include "Comrade/Systems/TagSystem.h"
+#include "Comrade/Systems/CameraControlSystem.h"
 
 #include <entt/entt.hpp>
 
@@ -25,5 +26,6 @@ namespace Comrade
 	private:
 		entt::registry m_Registry;
 		TagSystem m_TagSystem;
+		CameraControlSystem m_CameraControlSystem;
 	};
 }
