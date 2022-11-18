@@ -1,25 +1,19 @@
 #pragma once
 
+#include "Comrade/Renderer/Renderer2D.h"
 #include "Comrade/Utils/Memory.h"
-#include "Comrade/Renderer/Shader.h"
-#include "Comrade/Renderer/VertexArray.h"
-#include "Comrade/Renderer/VertexBuffer.h"
-#include "Comrade/Renderer/IndexBuffer.h"
 
 namespace Comrade
 {
 	class Renderer
 	{
 	public:
-		Renderer();
+		bool Init();
 
-		void RenderSample();
+		inline MemoryRef<Renderer2D>& GetRenderer2D() { return m_Renderer2D; }
 
 	private:
-		MemoryRef<Shader> m_Shader;
-		MemoryRef<VertexArray> m_VertexArray;
-		MemoryRef<VertexBuffer> m_VertexBuffer;
-		MemoryRef<IndexBuffer> m_IndexBuffer;
+		MemoryRef<Renderer2D> m_Renderer2D;
 	};
 }
 
