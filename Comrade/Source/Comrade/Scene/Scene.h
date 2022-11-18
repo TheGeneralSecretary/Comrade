@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Comrade/Core/DeltaTime.h"
-#include "Comrade/Renderer/Renderer.h"
 #include "Comrade/Systems/TagSystem.h"
 #include "Comrade/Systems/CameraControlSystem.h"
+#include "Comrade/Systems/RenderSystem.h"
 
 #include <entt/entt.hpp>
 
@@ -15,7 +15,6 @@ namespace Comrade
 	{
 	public:
 		void OnSceneUpdate(DeltaTime dt);
-		void OnSceneRender(const MemoryRef<Renderer>& renderer);
 		void OnSceneViewPortResize(int width, int height);
 
 		Entity CreateEntity(const std::string& name = "");
@@ -27,5 +26,6 @@ namespace Comrade
 		entt::registry m_Registry;
 		TagSystem m_TagSystem;
 		CameraControlSystem m_CameraControlSystem;
+		RenderSystem m_RenderSystem;
 	};
 }

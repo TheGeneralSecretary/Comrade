@@ -25,6 +25,7 @@ namespace Comrade
 	{
 	public:
 		bool Init();
+		void Destroy();
 
 		void BeginRender();
 		void BeginRender(const Camera& camera, const glm::mat4& transform);
@@ -53,6 +54,8 @@ namespace Comrade
 		void ResetBatch();
 
 	private:
+		bool m_Initialized = false;
+
 		uint32_t m_MaxQuadCount;
 		uint32_t m_MaxVertexCount;
 		uint32_t m_MaxIndexCount;

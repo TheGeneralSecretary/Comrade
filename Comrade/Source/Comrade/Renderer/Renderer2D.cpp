@@ -50,7 +50,15 @@ namespace Comrade
 		m_Textures = CreateScope<MemoryRef<Texture2D>[]>(m_MaxTextureCount);
 		m_Textures[0] = m_BlankTexture;
 
-		return true;
+		return m_Initialized = true;
+	}
+
+	void Renderer2D::Destroy()
+	{
+		if (m_Initialized)
+		{
+			m_Initialized = false;
+		}
 	}
 
 	void Renderer2D::BeginRender()
