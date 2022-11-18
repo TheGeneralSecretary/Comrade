@@ -1,5 +1,6 @@
 #include "comradepch.h"
 #include "Comrade/Renderer/Renderer.h"
+#include "Comrade/Renderer/Render.h"
 #include "Comrade/Core/Logger.h"
 
 namespace Comrade
@@ -14,5 +15,10 @@ namespace Comrade
 		}
 
 		return true;
+	}
+
+	void Renderer::SetViewPort(int width, int height)
+	{
+		Render::SetViewPort(0, 0, width, height);
 	}
 }

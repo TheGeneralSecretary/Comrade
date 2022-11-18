@@ -15,6 +15,11 @@ namespace Comrade
 		glClearColor(color.x, color.y, color.z, color.w);
 	}
 
+	void Render::SetViewPort(int x, int y, int width, int height)
+	{
+		glViewport(x, y, width, height);
+	}
+
 	void Render::DrawIndexed(const MemoryRef<VertexArray>& va, unsigned int count)
 	{
 		glDrawElements(GL_TRIANGLES, count == 0 ? va->GetIndexBuffer()->GetCount() : count, GL_UNSIGNED_INT, nullptr);

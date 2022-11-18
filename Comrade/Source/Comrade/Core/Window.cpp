@@ -1,6 +1,7 @@
 #include "comradepch.h"
 #include "Comrade/Core/Window.h"
 #include "Comrade/Core/Logger.h"
+#include "Comrade/Events/AppEvent.h"
 
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
@@ -20,8 +21,26 @@ namespace Comrade
 
 	bool Window::Init(const WindowProps& props)
 	{
-		m_WinProps = props;
-		return InitContext();
+		m_WinData.Name = props.Name;
+		m_WinData.Width = props.Width;
+		m_WinData.Height = props.Height;
+		m_WinData.VSync = props.VSync;
+
+		if (!InitContext()) return false;
+		if (!InitEventSystem()) return false;
+		return true;
+	}
+
+	void Window::Update()
+	{
+		glfwPollEvents();
+		glfwSwapBuffers(m_NativeWindow);
+	}
+
+	void Window::SetVSync(bool vsync)
+	{
+		m_WinData.VSync = vsync;
+		glfwSwapInterval(m_WinData.VSync ? 1 : 0);
 	}
 
 	bool Window::InitContext()
@@ -40,16 +59,16 @@ namespace Comrade
 #endif
 		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 
-		m_NativeWindow = glfwCreateWindow(m_WinProps.Width, m_WinProps.Height, m_WinProps.Name.c_str(), nullptr, nullptr);
+		m_NativeWindow = glfwCreateWindow(m_WinData.Width, m_WinData.Height, m_WinData.Name.c_str(), nullptr, nullptr);
 		if (!m_NativeWindow)
 		{
-			COMRADE_LOG_ERROR("FAILED glfwCreateWindow for {}", m_WinProps.Name);
+			COMRADE_LOG_ERROR("FAILED glfwCreateWindow for {}", m_WinData.Name);
 			glfwTerminate();
 			return false;
 		}
 
 		glfwMakeContextCurrent(m_NativeWindow);
-		glfwSwapInterval(m_WinProps.VSync ? 1 : 0);
+		glfwSwapInterval(m_WinData.VSync ? 1 : 0);
 
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 		{
@@ -68,15 +87,24 @@ namespace Comrade
 		return true;
 	}
 
-	void Window::Update()
+	bool Window::InitEventSystem()
 	{
-		glfwPollEvents();
-		glfwSwapBuffers(m_NativeWindow);
-	}
+		glfwSetWindowUserPointer(m_NativeWindow, &m_WinData);
 
-	void Window::SetVSync(bool vsync)
-	{
-		m_WinProps.VSync = vsync;
-		glfwSwapInterval(m_WinProps.VSync ? 1 : 0);
+		glfwSetWindowCloseCallback(m_NativeWindow, [](GLFWwindow* window)
+			{
+				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+				data.EventCallback(WindowCloseEvent{});
+			});
+
+		glfwSetWindowSizeCallback(m_NativeWindow, [](GLFWwindow* window, int width, int height)
+			{
+				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+				data.Width = width;
+				data.Height = height;
+				data.EventCallback(WindowResizeEvent({ width, height }));
+			});
+
+		return true;
 	}
 }

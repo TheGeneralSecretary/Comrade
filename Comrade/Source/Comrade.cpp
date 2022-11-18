@@ -16,10 +16,6 @@ public:
 	Sandbox(const Comrade::ApplicationProps& props)
 		: Comrade::Application(props)
 	{
-		m_Renderer = Comrade::CreateRef<Comrade::Renderer>();
-		if (!m_Renderer->Init())
-			COMRADE_LOG_ERROR("FAILED TO INIT RENDERER");
-
 		m_Texture2D = Comrade::CreateRef<Comrade::Texture2D>("Assets/Textures/Comrade.jpg");
 	}
 
@@ -44,6 +40,11 @@ public:
 		m_Renderer->GetRenderer2D()->EndRender();
 	}
 
+	virtual void OnEvent(Comrade::Event& event) override
+	{
+		COMRADE_LOG_INFO("RECV EVENT:({}, {})", (int)event.GetEventType(), event.IsHandled());
+	}
+
 	virtual void OnImGuiRender(Comrade::DeltaTime dt) override
 	{
 		auto& stats = m_Renderer->GetRenderer2D()->GetRenderStats();
@@ -58,7 +59,6 @@ public:
 	}
 
 private:
-	Comrade::MemoryRef<Comrade::Renderer> m_Renderer;
 	Comrade::MemoryRef<Comrade::Texture2D> m_Texture2D;
 	double m_FPS = 0.0f;
 };
