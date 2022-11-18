@@ -5,6 +5,8 @@
 #include <Comrade/Renderer/Renderer.h>
 #include <Comrade/Renderer/Render.h>
 #include <Comrade/Utils/Memory.h>
+#include <Comrade/Scene/Scene.h>
+#include <Comrade/Scene/Entity.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -17,6 +19,10 @@ public:
 		: Comrade::Application(props)
 	{
 		m_Texture2D = Comrade::CreateRef<Comrade::Texture2D>("Assets/Textures/Comrade.jpg");
+
+		m_ActiveScene = Comrade::CreateRef<Comrade::Scene>();
+		m_ActiveScene->CreateEntity("Tester");
+		m_ActiveScene->CreateEntity("");
 	}
 
 	~Sandbox()
@@ -32,12 +38,14 @@ public:
 		Comrade::Render::SetClearColor({ 0.3f, 0.3f, 0.3f, 0.3f });
 		Comrade::Render::Clear();
 
-		m_Renderer->GetRenderer2D()->BeginRender();
+		m_ActiveScene->OnSceneUpdate(dt);
+
+		/*m_Renderer->GetRenderer2D()->BeginRender();
 
 		m_Renderer->GetRenderer2D()->RenderQuad({ -0.5f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 1.0f, 1.0f, 1.0f });
 		m_Renderer->GetRenderer2D()->RenderQuad({ 0.5f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f }, m_Texture2D);
 
-		m_Renderer->GetRenderer2D()->EndRender();
+		m_Renderer->GetRenderer2D()->EndRender();*/
 	}
 
 	virtual void OnEvent(Comrade::Event& event) override
@@ -59,8 +67,9 @@ public:
 	}
 
 private:
-	Comrade::MemoryRef<Comrade::Texture2D> m_Texture2D;
 	double m_FPS = 0.0f;
+	Comrade::MemoryRef<Comrade::Scene> m_ActiveScene;
+	Comrade::MemoryRef<Comrade::Texture2D> m_Texture2D;
 };
 
 int main(int argc, char** argv)
