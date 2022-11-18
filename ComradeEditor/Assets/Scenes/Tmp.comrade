@@ -4,8 +4,8 @@ Entities:
     TagComponent:
       Tag: Square
     TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
+      Translation: [0, -0.100000001, -1]
+      Rotation: [-0.678933084, 0.506145477, 1.37531948]
       Scale: [1, 1, 1]
     SpriteRendererComponent:
       Color: [1, 1, 1, 1]
@@ -13,14 +13,17 @@ Entities:
     TagComponent:
       Tag: Camera
     TransformComponent:
-      Translation: [0, 0, 0]
+      Translation: [0.115580387, -0.250247866, 4]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
     CameraComponent:
       Primary: true
       Fixed: false
       Camera:
-        ProjectionType: 0
-        OrthographicSize: 6
+        ProjectionType: 1
+        OrthographicSize: 1
         OrthographicNear: -1
         OrthographicFar: 1
+        PerspectiveFOV: 45
+        PerspectiveNear: 0.100000001
+        PerspectiveFar: 100

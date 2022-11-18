@@ -40,7 +40,7 @@ namespace Comrade
 		m_QuadVertexArray->AddVertexBuffer(m_QuadVertexBuffer);
 		m_QuadVertexArray->SetIndexBuffer(m_QuadIndexBuffer);
 	
-		m_QuadTemplate = CreateQuad({ 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f });
+		m_QuadTemplate = CreateCenteredQuad({ 1.0f, 1.0f, 1.0f, 1.0f });
 		m_QuadVertices = CreateScope<QuadVertex[]>(m_MaxVertexCount);
 
 		uint32_t blank = 0xffffffff;
@@ -206,6 +206,35 @@ namespace Comrade
 
 		QuadVertex v3;
 		v3.Position = { position.x,  position.y + (size * scale.y), position.z, };
+		v3.Color = color;
+		v3.TextureUV = { 0.0f, 1.0f };
+		v3.TextureID = texID;
+
+		return { v0, v1, v2, v3 };
+	}
+
+	std::array<Renderer2D::QuadVertex, 4> Renderer2D::CreateCenteredQuad(const glm::vec4& color, float texID)
+	{
+		QuadVertex v0;
+		v0.Position = { -0.5f, -0.5f, 0.0f };
+		v0.Color = color;
+		v0.TextureUV = { 0.0f, 0.0f };
+		v0.TextureID = texID;
+
+		QuadVertex v1;
+		v1.Position = { 0.5f, -0.5f, 0.0f };
+		v1.Color = color;
+		v1.TextureUV = { 1.0f, 0.0f };
+		v1.TextureID = texID;
+
+		QuadVertex v2;
+		v2.Position = { 0.5f, 0.5f, 0.0f };
+		v2.Color = color;
+		v2.TextureUV = { 1.0f, 1.0f };
+		v2.TextureID = texID;
+
+		QuadVertex v3;
+		v3.Position = { -0.5f, 0.5f, 0.0f };
 		v3.Color = color;
 		v3.TextureUV = { 0.0f, 1.0f };
 		v3.TextureID = texID;

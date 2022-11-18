@@ -109,6 +109,9 @@ namespace Comrade
 			out << YAML::Key << "OrthographicSize" << YAML::Value << camera.Camera.GetOrthographicSize();
 			out << YAML::Key << "OrthographicNear" << YAML::Value << camera.Camera.GetOrthographicNear();
 			out << YAML::Key << "OrthographicFar" << YAML::Value << camera.Camera.GetOrthographicFar();
+			out << YAML::Key << "PerspectiveFOV" << YAML::Value << camera.Camera.GetPerspectiveFOV();
+			out << YAML::Key << "PerspectiveNear" << YAML::Value << camera.Camera.GetPerspectiveNear();
+			out << YAML::Key << "PerspectiveFar" << YAML::Value << camera.Camera.GetPerspectiveFar();
 			out << YAML::EndMap;
 			out << YAML::EndMap;
 		}
@@ -180,6 +183,9 @@ namespace Comrade
 				camera.Camera.SetOrthographicSize(entity["CameraComponent"]["Camera"]["OrthographicSize"].as<float>());
 				camera.Camera.SetOrthographicNear(entity["CameraComponent"]["Camera"]["OrthographicNear"].as<float>());
 				camera.Camera.SetOrthographicFar(entity["CameraComponent"]["Camera"]["OrthographicFar"].as<float>());
+				camera.Camera.SetPerspectiveFOV(entity["CameraComponent"]["Camera"]["PerspectiveFOV"].as<float>());
+				camera.Camera.SetPerspectiveNear(entity["CameraComponent"]["Camera"]["PerspectiveNear"].as<float>());
+				camera.Camera.SetPerspectiveFar(entity["CameraComponent"]["Camera"]["PerspectiveFar"].as<float>());
 			}
 
 			if (entity["SpriteRendererComponent"])
