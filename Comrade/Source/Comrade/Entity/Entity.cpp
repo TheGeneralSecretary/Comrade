@@ -1,5 +1,5 @@
 #include "comradepch.h"
-#include "Comrade/Scene/Entity.h"
+#include "Comrade/Entity/Entity.h"
 
 namespace Comrade
 {

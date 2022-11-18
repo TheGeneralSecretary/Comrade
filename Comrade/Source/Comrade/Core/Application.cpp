@@ -72,6 +72,6 @@ namespace Comrade
 		m_Minimized = false;
 		m_Renderer->SetViewPort(event.GetWidth(), event.GetHeight());
 
-		return true;
+		return false;
 	}
 }

@@ -1,6 +1,6 @@
 #include "comradepch.h"
 #include "Comrade/Systems/TagSystem.h"
-#include "Comrade/Scene/Components.h"
+#include "Comrade/Entity/Components.h"
 #include "Comrade/Core/Logger.h"
 
 namespace Comrade

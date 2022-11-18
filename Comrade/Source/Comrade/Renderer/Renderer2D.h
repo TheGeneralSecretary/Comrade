@@ -6,6 +6,7 @@
 #include "Comrade/Renderer/VertexBuffer.h"
 #include "Comrade/Renderer/IndexBuffer.h"
 #include "Comrade/Renderer/Texture.h"
+#include "Comrade/Renderer/Camera.h"
 
 #include <glm/glm.hpp>
 #include <array>
@@ -26,6 +27,7 @@ namespace Comrade
 		bool Init();
 
 		void BeginRender();
+		void BeginRender(const Camera& camera, const glm::mat4& transform);
 		void EndRender();
 
 		void RenderQuad(const glm::mat4& transform, const glm::vec4& color);
