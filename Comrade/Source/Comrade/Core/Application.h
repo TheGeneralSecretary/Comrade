@@ -43,8 +43,10 @@ namespace Comrade
 	private:
 		static Application* s_Instance;
 		bool m_Running, m_Minimized;
-		ApplicationProps m_AppProps;
 		std::unique_ptr<Window> m_Window;
 		std::unique_ptr<CImGui> m_ImGui;
+
+	protected:
+		ApplicationProps m_AppProps;
 	};
 }
