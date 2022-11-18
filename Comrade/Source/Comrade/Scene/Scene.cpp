@@ -35,4 +35,9 @@ namespace Comrade
 		tag.Tag = name.empty() ? "Entity" : name;
 		return entity;
 	}
+
+	void Scene::DestroyEntity(Entity& entity)
+	{
+		m_Registry.destroy((entt::entity)entity.GetID());
+	}
 }

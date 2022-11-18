@@ -15,13 +15,35 @@ namespace Comrade
 
 		if (entity.HasComponent<T>())
 		{
+			bool remove = false;
 			auto& component = entity.GetComponent<T>();
 
 			bool open = ImGui::TreeNodeEx((void*)typeid(T).hash_code(), treeFlags, name.c_str());
+			
+			ImGui::SameLine();
+			if (ImGui::Button("-"))
+				remove = true;
+
 			if (open)
 			{
 				func(component);
 				ImGui::TreePop();
+			}
+
+			if (remove)
+				entity.RemoveComponent<T>();
+		}
+	}
+
+	template<typename T>
+	static void AddComponentEntry(const std::string& name, Entity& entity)
+	{
+		if (!entity.HasComponent<T>())
+		{
+			if (ImGui::MenuItem(name.c_str()))
+			{
+				entity.AddComponent<T>();
+				ImGui::CloseCurrentPopup();
 			}
 		}
 	}
@@ -32,7 +54,20 @@ namespace Comrade
 		Entity& entity = SceneHierarchyPanel::GetSelectedEntity();
 
 		if (entity)
+		{
 			DrawProperties(entity);
+
+			if (ImGui::Button("Add Component"))
+				ImGui::OpenPopup("AddComponent");
+
+			if (ImGui::BeginPopup("AddComponent"))
+			{
+				AddComponentEntry<CameraComponent>("Camera", entity);
+				AddComponentEntry<SpriteRendererComponent>("SpriteRenderer", entity);
+
+				ImGui::EndPopup();
+			}
+		}
 
 		ImGui::End();
 	}

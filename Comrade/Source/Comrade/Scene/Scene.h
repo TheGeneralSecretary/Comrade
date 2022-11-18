@@ -18,6 +18,7 @@ namespace Comrade
 		void OnSceneViewPortResize(int width, int height);
 
 		Entity CreateEntity(const std::string& name = "");
+		void DestroyEntity(Entity& entity);
 
 		inline entt::registry& GetRegistry() { return m_Registry; }
 
