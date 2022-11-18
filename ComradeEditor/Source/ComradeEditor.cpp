@@ -15,6 +15,8 @@
 #include <Comrade/Input/Input.h>
 #include <Comrade/Renderer/Framebuffer.h>
 #include <Comrade/Scene/SceneSerializer.h>
+#include <Comrade/Scene/EditorCamera.h>
+
 #include <Comrade/Platform/FileDialog.h>
 
 #include <glm/glm.hpp>
@@ -34,6 +36,8 @@ namespace Comrade
 
 			PanelManager::AddPanel("SceneHierarchyPanel", CreateRef<SceneHierarchyPanel>(m_ActiveScene));
 			PanelManager::AddPanel("PropertiesyPanel", CreateRef<PropertiesPanel>());
+
+			m_EditorCamera = CreateRef<EditorCamera>(45.0f, ((float)props.Width / (float)props.Height), 0.1f, 100.0f);
 		}
 
 		~ComradeEditor()
@@ -46,6 +50,12 @@ namespace Comrade
 			{
 				m_Framebuffer->Resize(m_ViewPort.x, m_ViewPort.y);
 				m_ActiveScene->OnSceneViewPortResize(m_ViewPort.x, m_ViewPort.y);
+				m_EditorCamera->SetViewPort(m_ViewPort.x, m_ViewPort.y);
+			}
+
+			if (m_ViewPortFocused)
+			{
+				m_EditorCamera->OnUpdate(dt);
 			}
 
 			m_FPS = (1.0f / dt);
@@ -57,7 +67,8 @@ namespace Comrade
 			Render::SetClearColor({ 0.3f, 0.3f, 0.3f, 0.3f });
 			Render::Clear();
 
-			m_ActiveScene->OnSceneUpdate(dt);
+			//m_ActiveScene->OnSceneRuntime(dt);
+			m_ActiveScene->OnSceneEditor(dt, *m_EditorCamera);
 
 			m_Framebuffer->Unbind();
 		}
@@ -65,6 +76,7 @@ namespace Comrade
 		virtual void OnEvent(Event& event) override
 		{
 			//COMRADE_LOG_INFO("RECV EVENT:({}, {})", (int)event.GetEventType(), event.IsHandled());
+			m_EditorCamera->OnEvent(event);
 		}
 
 		virtual void OnImGuiRender(DeltaTime dt) override
@@ -213,6 +225,7 @@ namespace Comrade
 		glm::vec2 m_ViewPort;
 		bool m_ViewPortFocused = false;
 		std::string m_ScenePath;
+		MemoryRef<EditorCamera> m_EditorCamera;
 	};
 }
 

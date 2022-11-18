@@ -4,6 +4,7 @@
 #include "Comrade/Systems/TagSystem.h"
 #include "Comrade/Systems/CameraControlSystem.h"
 #include "Comrade/Systems/RenderSystem.h"
+#include "Comrade/Scene/EditorCamera.h"
 
 #include <entt/entt.hpp>
 
@@ -15,7 +16,8 @@ namespace Comrade
 	{
 	public:
 		Scene(const std::string& name = "Untitled");
-		void OnSceneUpdate(DeltaTime dt);
+		void OnSceneRuntime(DeltaTime dt);
+		void OnSceneEditor(DeltaTime dt, EditorCamera& camera);
 		void OnSceneViewPortResize(int width, int height);
 
 		Entity CreateEntity(const std::string& name = "");
