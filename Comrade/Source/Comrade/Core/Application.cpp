@@ -17,6 +17,7 @@ namespace Comrade
 		: m_AppProps(props), m_Running(true), m_Minimized(false)
 	{
 		s_Instance = this;
+		Logger::Init();
 
 		m_Window = std::make_unique<Window>();
 		m_Window->Init({ props.Name, props.Width, props.Height, props.VSync });
